@@ -1,14 +1,21 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
-public class Board : MonoBehaviour
+
+
+public class Board3 : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
-    public Piece activePiece { get; private set; }
+    public Piece3 activePiece { get; private set; }
 
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
+
+    //Determines when to change to the next level
+    public float timer = 0f;
+    public float timeLimit = 180f; //3 min
 
     public RectInt Bounds {
         get
@@ -21,7 +28,7 @@ public class Board : MonoBehaviour
     private void Awake()
     {
         tilemap = GetComponentInChildren<Tilemap>();
-        activePiece = GetComponentInChildren<Piece>();
+        activePiece = GetComponentInChildren<Piece3>();
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
@@ -31,14 +38,15 @@ public class Board : MonoBehaviour
     private void Start()
     {
         SpawnPiece();
+        
     }
 
-    public void SpawnPiece()
-    {
+    public void SpawnPiece() {
         int random = Random.Range(0, tetrominoes.Length);
         TetrominoData data = tetrominoes[random];
 
-        activePiece.Initialize(this, spawnPosition, data);
+        activePiece.Initialize(this, spawnPosition, data); 
+ 
 
         if (IsValidPosition(activePiece, spawnPosition)) {
             Set(activePiece);
@@ -47,14 +55,16 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void GameOver()
-    {
+
+    public void GameOver() {
+
         tilemap.ClearAllTiles();
 
-        // Do anything else you want on game over here..
+        SceneManager.LoadScene("GameOver");
+ 
     }
 
-    public void Set(Piece piece)
+    public void Set(Piece3 piece)
     {
         for (int i = 0; i < piece.cells.Length; i++)
         {
@@ -63,7 +73,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void Clear(Piece piece)
+    public void Clear(Piece3 piece)
     {
         for (int i = 0; i < piece.cells.Length; i++)
         {
@@ -72,7 +82,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public bool IsValidPosition(Piece piece, Vector3Int position)
+    public bool IsValidPosition(Piece3 piece, Vector3Int position)
     {
         RectInt bounds = Bounds;
 
@@ -156,5 +166,4 @@ public class Board : MonoBehaviour
             row++;
         }
     }
-
 }

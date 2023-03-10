@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Piece : MonoBehaviour
+public class Piece2 : MonoBehaviour
 {
-    public Board board { get; private set; }
+    public Board2 board { get; private set; }
     public TetrominoData data { get; private set; }
     public Vector3Int[] cells { get; private set; }
     public Vector3Int position { get; private set; }
@@ -16,8 +16,7 @@ public class Piece : MonoBehaviour
     private float moveTime;
     private float lockTime;
 
-    public void Initialize(Board board, Vector3Int position, TetrominoData data)
-    {
+    public void Initialize(Board2 board, Vector3Int position, TetrominoData data) {
         this.data = data;
         this.board = board;
         this.position = position;
@@ -38,6 +37,12 @@ public class Piece : MonoBehaviour
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         board.Clear(this);
 
         // We use a timer to allow the player to make adjustments to the piece
@@ -45,16 +50,16 @@ public class Piece : MonoBehaviour
         lockTime += Time.deltaTime;
 
         // Handle rotation
-        if (Input.GetKeyDown(KeyCode.Q)) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             Rotate(-1);
         } else if (Input.GetKeyDown(KeyCode.E)) {
             Rotate(1);
         }
 
         // Handle hard drop
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        /*if (Input.GetKeyDown(KeyCode.Space)) {
             HardDrop();
-        }
+        }*/
 
         // Allow the player to hold movement keys but only after a move delay
         // so it does not move too fast
@@ -73,7 +78,7 @@ public class Piece : MonoBehaviour
     private void HandleMoveInputs()
     {
         // Soft drop movement
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             if (Move(Vector2Int.down)) {
                 // Update the step time to prevent double movement
@@ -82,9 +87,9 @@ public class Piece : MonoBehaviour
         }
 
         // Left/right movement
-        if (Input.GetKey(KeyCode.A)) {
+        if (Input.GetKey(KeyCode.LeftArrow)) {
             Move(Vector2Int.left);
-        } else if (Input.GetKey(KeyCode.D)) {
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
             Move(Vector2Int.right);
         }
     }
@@ -222,5 +227,4 @@ public class Piece : MonoBehaviour
             return min + (input - min) % (max - min);
         }
     }
-
 }
